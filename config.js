@@ -10,7 +10,7 @@ global.prefisso = '.'
 global.sam = ['77479651350',]
 global.owner = [
   ['77479651350', 'Riley', true],
-  ['xxxxxxxxxxxx'],
+  ['212784392820', 'deadly', true],
   ['xxxxxxxxxxxx'],
   ['xxxxxxxxxxxx'],
   ['xxxxxxxxxxxx'],
