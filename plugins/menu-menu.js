@@ -70,44 +70,36 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname }) => {
 
     let text = _text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name]);
 
-    const buttonsBlocco1 = [
-      { buttonId: `${_p}menuia`, buttonText: { displayText: '🤖 INFORMATICA / IA' }, type: 1 },
-      { buttonId: `${_p}menupremium`, buttonText: { displayText: '⭐ PREMIUM' }, type: 1 },
-      { buttonId: `${_p}menustrumenti`, buttonText: { displayText: '🛠️ STRUMENTI' }, type: 1 }
-    ];
+    let thumbnailBuffer;
+    try {
+      const response = await fetch(swag);
+      thumbnailBuffer = Buffer.from(await response.arrayBuffer());
+    } catch {
+      thumbnailBuffer = Buffer.alloc(0);
+    }
 
-    await conn.sendMessage(m.chat, {
-      image: { url: swag },
-      caption: text.trim(),
-      footer: '𝐑𝐋𝐘 𝐁𝐎𝐓 - Sezione 1',
-      buttons: buttonsBlocco1,
-      headerType: 4
-    }, { quoted: m });
-
-    const buttonsBlocco2 = [
-      { buttonId: `${_p}menueuro`, buttonText: { displayText: '💰 ECONOMIA / EURO' }, type: 1 },
-      { buttonId: `${_p}menugiochi`, buttonText: { displayText: '🎮 GIOCHI' }, type: 1 },
-      { buttonId: `${_p}menugruppo`, buttonText: { displayText: '👥 GRUPPO' }, type: 1 }
-    ];
-
-    await conn.sendMessage(m.chat, {
-      text: '⬇️ *Espandi le altre sezioni del menu qui sotto:*',
-      footer: '𝐑𝐋𝐘 𝐁𝐎𝐓 - Sezione 2',
-      buttons: buttonsBlocco2,
-      headerType: 1
-    }, { quoted: m });
-
-    const buttonsBlocco3 = [
-      { buttonId: `${_p}menuricerche`, buttonText: { displayText: '🔍 RICERCHE' }, type: 1 },
-      { buttonId: `${_p}menudownload`, buttonText: { displayText: '📥 DOWNLOAD' }, type: 1 },
-      { buttonId: `${_p}menucreatore`, buttonText: { displayText: '👨‍💻 CREATORE' }, type: 1 }
-    ];
-
-    await conn.sendMessage(m.chat, {
-      text: '⬇️ *Ultimi menu di gestione:*',
-      footer: '𝐑𝐋𝐘 𝐁𝐎𝐓 - Sezione 3',
-      buttons: buttonsBlocco3,
-      headerType: 1
+    await conn.relayMessage(m.chat, {
+      viewOnceMessage: {
+        message: {
+          buttonsMessage: {
+            imageMessage: thumbnailBuffer.length ? (await conn.prepareMessageMedia(thumbnailBuffer, {製造Type: 'image'})).imageMessage : null,
+            contentText: text.trim(),
+            footerText: '𝐑𝐋𝐘 𝐁𝐎𝐓 • Scegli una categoria',
+            headerType: 4,
+            buttons: [
+              { buttonId: `${_p}menuia`, buttonText: { displayText: '🤖 IA' }, type: 1 },
+              { buttonId: `${_p}menupremium`, buttonText: { displayText: '⭐ PREMIUM' }, type: 1 },
+              { buttonId: `${_p}menustrumenti`, buttonText: { displayText: '🛠️ STRUMENTI' }, type: 1 },
+              { buttonId: `${_p}menueuro`, buttonText: { displayText: '💰 EURO' }, type: 1 },
+              { buttonId: `${_p}menugiochi`, buttonText: { displayText: '🎮 GIOCHI' }, type: 1 },
+              { buttonId: `${_p}menugruppo`, buttonText: { displayText: '👥 GRUPPO' }, type: 1 },
+              { buttonId: `${_p}menuricerche`, buttonText: { displayText: '🔍 RICERCHE' }, type: 1 },
+              { buttonId: `${_p}menudownload`, buttonText: { displayText: '📥 DOWNLOAD' }, type: 1 },
+              { buttonId: `${_p}menucreatore`, buttonText: { displayText: '👨‍💻 CREATORE' }, type: 1 }
+            ]
+          }
+        }
+      }
     }, { quoted: m });
 
   } catch (e) {
